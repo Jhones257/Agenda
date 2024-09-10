@@ -7,9 +7,8 @@ from random import choice
 import django
 from django.conf import settings
 
-
-DJANGO_BASE_DIR = Path(django.__file__).parent.parent
-NUMBER_OF_OBJETCS = 100
+DJANGO_BASE_DIR = Path(__file__).parent.parent
+NUMBER_OF_OBJECTS = 100
 
 sys.path.append(str(DJANGO_BASE_DIR))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'project.settings'
@@ -23,10 +22,11 @@ if __name__ == '__main__':
     from contact.models import Category, contact
 
     contact.objects.all().delete()
-    Category.objects.all().delete() 
+    Category.objects.all().delete()
 
     fake = faker.Faker('pt_BR')
-    categories = ['Familia', 'Amigos', 'Conhecidos']
+    categories = ['Amigos', 'Família', 'Conhecidos']
+
     django_categories = [Category(name=name) for name in categories]
 
     for category in django_categories:
@@ -34,13 +34,13 @@ if __name__ == '__main__':
 
     django_contacts = []
 
-    for _ in range(NUMBER_OF_OBJETCS):
+    for _ in range(NUMBER_OF_OBJECTS):
         profile = fake.profile()
         email = profile['mail']
-        first_name, last_name = profile['name'].split()[:1]
+        first_name, last_name = profile['name'].split(' ', 1)
         phone = fake.phone_number()
-        created_date : datetime = fake.date_this_year()
-        description= random_text = fake.text(max_nb_chars=200)
+        created_date: datetime = fake.date_this_year()
+        description = fake.text(max_nb_chars=100)
         category = choice(django_categories)
 
         django_contacts.append(
@@ -51,9 +51,9 @@ if __name__ == '__main__':
                 email=email,
                 created_at=created_date,
                 description=description,
-                category=category
+                category=category,
             )
         )
+
     if len(django_contacts) > 0:
         contact.objects.bulk_create(django_contacts)
-        print(f'{len(django_contacts)} contacts created')

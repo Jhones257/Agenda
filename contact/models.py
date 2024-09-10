@@ -12,7 +12,7 @@ class Category(models.Model):
         return self.name
 
 
-class contact(models.Model):
+class Contact(models.Model):
     frist_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=20)
