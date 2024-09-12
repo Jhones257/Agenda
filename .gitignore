@@ -1,3 +1,4 @@
 static/
 media/
 project/local_settings.py
+venv
